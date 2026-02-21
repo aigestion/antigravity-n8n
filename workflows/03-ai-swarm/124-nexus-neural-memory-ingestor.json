@@ -1,0 +1,77 @@
+{
+  "name": "124-nexus-neural-memory-ingestor",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "neural-ingest",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "filename",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"source\"]}}-{{$node[\"Webhook\"].json[\"body\"][\"id\"] || Math.random().toString(36).substr(2, 9)}}"
+            },
+            {
+              "name": "content",
+              "value": "=Sovereign Intelligence Event Log:\nSource: {{$node[\"Webhook\"].json[\"body\"][\"source\"]}}\nTimestamp: {{$node[\"Webhook\"].json[\"body\"][\"timestamp\"] || new Date().toISOString()}}\nEvent: {{$node[\"Webhook\"].json[\"body\"][\"event\"]}}\nDetails: {{$node[\"Webhook\"].json[\"body\"][\"details\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Format Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://localhost:5000/api/v1/rag/ingest-json",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonParameters": true,
+        "bodyParametersJson": "={\n  \"filename\": \"{{$node[\"Format Data\"].json[\"filename\"]}}\",\n  \"content\": \"{{$node[\"Format Data\"].json[\"content\"]}}\",\n  \"tags\": [\"sovereign-event\", \"neural-memory\"]\n}",
+        "options": {}
+      },
+      "name": "Push to RAG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Format Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Data": {
+      "main": [
+        [
+          {
+            "node": "Push to RAG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
