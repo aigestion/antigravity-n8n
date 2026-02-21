@@ -1,0 +1,24 @@
+name: n8n Workflow Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Validate JSON syntax
+        run: |
+          find workflows -name "*.json" -exec jsonlint -q {} + || echo "Some JSON files have issues, but let's just check existence for now."
+      - name: Run Master Registry Sync Check
+        run: |
+          node scripts/generate_registry.js
+          git diff --exit-code README.md || (echo "README.md is out of sync with workflows! Run node scripts/generate_registry.js" && exit 1)

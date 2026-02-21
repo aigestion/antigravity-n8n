@@ -1,0 +1,51 @@
+{
+  "name": "121-nexus-sovereign-bridge-health-monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "e6f8a8b1-1234-4567-890a-bcdef0123456",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$env[\"IA_ENGINE_URL\"]}}/api/v1/health",
+        "options": {}
+      },
+      "id": "f7a9b9c2-2345-5678-901b-cdef01234567",
+      "name": "Check Sovereign Bridge",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Sovereign Bridge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["Nexus", "Sovereign", "Health"]
+}

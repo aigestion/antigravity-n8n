@@ -1,0 +1,52 @@
+{
+  "name": "122-data-rag-engine-chromadb-maintenance",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-1234-4567-890a-bcdef0123456",
+      "name": "Daily Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env[\"IA_ENGINE_URL\"]}}/api/v1/rag/prune",
+        "options": {}
+      },
+      "id": "b2c3d4e5-2345-5678-901b-cdef01234567",
+      "name": "Prune Vectors",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Daily Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prune Vectors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["Nexus", "RAG", "Maintenance"]
+}

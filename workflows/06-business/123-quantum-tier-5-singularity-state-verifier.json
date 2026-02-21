@@ -1,0 +1,51 @@
+{
+  "name": "123-quantum-tier-5-singularity-state-verifier",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "c3d4e5f6-1234-4567-890a-bcdef0123456",
+      "name": "Hourly Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$env[\"BACKEND_URL\"]}}/api/v1/system/quantum-status",
+        "options": {}
+      },
+      "id": "d4e5f6a7-2345-5678-901b-cdef01234567",
+      "name": "Verify Singularity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Hourly Trigger": {
+      "main": [
+        [
+          {
+            "node": "Verify Singularity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["Nexus", "GodMode", "Quantum"]
+}
