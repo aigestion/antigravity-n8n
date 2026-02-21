@@ -66,6 +66,7 @@
 | 105 | USER Churn Risk Predictor |  | ⚪ Inactive |
 | 116 | QUANTUM Tier 5 Singularity State Verifier |  | ⚪ Inactive |
 | 121 | 121-nexus-sovereign-bridge-health-monitor | Nexus, Sovereign, Health | ✅ Active |
+| 124 | 124-nexus-neural-memory-ingestor |  | ⚪ Inactive |
 | 15 | 15-customer-sentiment-analysis |  | ⚪ Inactive |
 | 28 | 28-qa-bot-kb-sync |  | ⚪ Inactive |
 | 29 | 29-churn-prediction |  | ⚪ Inactive |
