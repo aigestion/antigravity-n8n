@@ -1,0 +1,75 @@
+{
+  "name": "124-sovereign-crm-lead-capture",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "sovereign-crm-lead",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 300],
+      "webhookId": "sovereign-crm-webhook"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "1AigestionCorporateRoot2026",
+        "range": "Leads!A:E",
+        "options": {}
+      },
+      "name": "Append to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [300, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-corp-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "5279281613",
+        "text": "=🔱 *Nuevo Lead Soberano Detectado* 🔱\n\n👤 *Nombre:* {{$node[\"Webhook Trigger\"].json[\"lead\"][\"name\"]}}\n📧 *Email:* {{$node[\"Webhook Trigger\"].json[\"lead\"][\"email\"]}}\n📞 *Tel:* {{$node[\"Webhook Trigger\"].json[\"lead\"][\"phone\"]}}\n🎯 *Intereses:* {{$node[\"Webhook Trigger\"].json[\"lead\"][\"interests\"].join(', ')}}\n\nDaniela lo ha archivado con arte en el Nexo. ✨",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Notify Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "soberano-bot-credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Append to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append to Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Notify Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

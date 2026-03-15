@@ -1,0 +1,65 @@
+{
+  "name": "01-sovereign-heartbeat",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": "={{$json[\"trigger\"]}}",
+        "options": {}
+      },
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [100, 300],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/neural-feed",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source",
+              "value": "n8n"
+            },
+            {
+              "name": "event",
+              "value": "Heartbeat Pulse"
+            },
+            {
+              "name": "detail",
+              "value": "Sovereign Bridge active and monitoring ecosystem health."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Push to Dashboard",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [320, 300]
+    }
+  ],
+  "connections": {
+    "Cron Trigger": {
+      "main": [
+        [
+          {
+            "node": "Push to Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "02-crm-lead-capture",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "crm-lead",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "application": "google-sheets",
+        "spreadsheet": "Sovereign_CRM",
+        "sheet": "Leads",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead_ID": "={{$node[\"Webhook\"].json[\"body\"][\"clientId\"]}}",
+            "Context": "={{$node[\"Webhook\"].json[\"body\"][\"text\"]}}",
+            "Date": "={{$node[\"Webhook\"].json[\"body\"][\"timestamp\"]}}"
+          }
+        },
+        "options": {}
+      },
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
